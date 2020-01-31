@@ -3,10 +3,9 @@
 import requests
 import re
 import sys
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from bs4 import BeautifulSoup
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 if( len(sys.argv) < 4):
 	print ("(-) usage dvwa-1.py target username password")
@@ -70,5 +69,5 @@ def dvwa_login(session_id, user_token):
 # Get initial CSRF token
 session_id, user_token = csrf_token()
 
-# Login to web app
+# Login to DVWA
 dvwa_login(session_id, user_token)
