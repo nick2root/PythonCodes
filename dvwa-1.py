@@ -56,7 +56,7 @@ def dvwa_login(session_id, user_token):
         print ("[i] Cookie: %s" % cookie)
         r = requests.post( url, data=data, cookies=cookie, headers=headers, verify=False, allow_redirects=False)
     except:
-        print "login failed, quiting"
+        print ("login failed, quiting")
         sys.exit(-1)
 
     if r.headers["Location"] != 'index.php':
