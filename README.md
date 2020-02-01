@@ -6,4 +6,6 @@ Before try our python scripts, you should install DVWA to your own environment. 
 
 This is template repository to help OSWE students.
 
+I promise this repo regulary updated.
+
 
