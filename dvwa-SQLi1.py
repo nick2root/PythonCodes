@@ -79,7 +79,10 @@ def SQLi(session_id):
     r = requests.get(SQli_url, params=encoded_data, cookies=cookie, headers=headers, verify=False)
     soup = BeautifulSoup(r.text, "html.parser")
     soup.prettify()
-    print(soup.find_all("div", {"class":"vulnerable_code_area"}))
+    soup1 =soup.find_all("div", {"class":"vulnerable_code_area"})
+    for ID in soup1[0].find_all("pre"):
+        print(ID)
+
 
 
 # Get initial CSRF token
